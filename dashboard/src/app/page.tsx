@@ -1,14 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { ConnectionStatus } from "@/components/ConnectionStatus";
 import { LiveFeed } from "@/components/LiveFeed";
+import { LatencyHeatmap } from "@/components/LatencyHeatmap";
+import { RuleEditor } from "@/components/RuleEditor";
 
 const WS_URL = "ws://localhost:8080/ws/metrics";
 
+type Tab = "feed" | "heatmap" | "rules";
+
 export default function DashboardPage() {
   const { events, connectionStatus } = useWebSocket(WS_URL);
+  const [activeTab, setActiveTab] = useState<Tab>("feed");
 
   const stats = useMemo(() => {
     if (events.length === 0) {
@@ -57,7 +62,30 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <LiveFeed events={events} />
+        <div className="tab-bar">
+          <button
+            className={`tab-button ${activeTab === "feed" ? "active" : ""}`}
+            onClick={() => setActiveTab("feed")}
+          >
+            Live Feed
+          </button>
+          <button
+            className={`tab-button ${activeTab === "heatmap" ? "active" : ""}`}
+            onClick={() => setActiveTab("heatmap")}
+          >
+            Heatmap
+          </button>
+          <button
+            className={`tab-button ${activeTab === "rules" ? "active" : ""}`}
+            onClick={() => setActiveTab("rules")}
+          >
+            Rules
+          </button>
+        </div>
+
+        {activeTab === "feed" && <LiveFeed events={events} />}
+        {activeTab === "heatmap" && <LatencyHeatmap events={events} />}
+        {activeTab === "rules" && <RuleEditor />}
       </main>
     </div>
   );
