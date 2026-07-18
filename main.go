@@ -11,6 +11,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/rs/cors"
+
 	"github.com/harsh-mishra123/gateway-go/internal/admin"
 	"github.com/harsh-mishra123/gateway-go/internal/chaos"
 	"github.com/harsh-mishra123/gateway-go/internal/metrics"
@@ -50,14 +52,20 @@ func main() {
 		middleware.Chaos(chaosEngine),
 	)
 
-	// Admin API for rule management.
-	adminHandler := admin.NewHandler(store)
+	// Admin API for rule management, with CORS so the dashboard (port 3000)
+	// can call the admin API (port 8080).
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:3000"},
+		AllowedMethods: []string{"GET", "POST", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"Content-Type"},
+	})
+	adminWithCors := corsHandler.Handler(admin.NewHandler(store))
 
 	// Single mux that routes /api/* to admin, /ws/* to WebSocket handlers,
 	// and everything else through the gateway middleware chain.
 	mux := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/api/") {
-			adminHandler.ServeHTTP(w, r)
+			adminWithCors.ServeHTTP(w, r)
 			return
 		}
 		if r.URL.Path == "/ws/metrics" {
