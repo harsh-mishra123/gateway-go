@@ -16,6 +16,7 @@ func RateLimit(limiter *ratelimit.Limiter) Middleware {
 			route := r.URL.Path
 
 			if !limiter.Allow(ip, route) {
+				r = WithRateLimited(r)
 				w.Header().Set("Content-Type", "application/json")
 				w.Header().Set("Retry-After", "1")
 				w.WriteHeader(http.StatusTooManyRequests)

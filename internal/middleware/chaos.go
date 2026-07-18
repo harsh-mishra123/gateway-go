@@ -19,12 +19,14 @@ func Chaos(engine *chaos.Engine) Middleware {
 			// Inject artificial latency if configured.
 			if delay := engine.GetLatency(route); delay > 0 {
 				log.Printf("chaos: injecting %s latency for %s", delay, route)
+				r = WithChaosLatency(r, float64(delay.Milliseconds()))
 				time.Sleep(delay)
 			}
 
 			// Inject artificial failure if the random roll says so.
 			if engine.ShouldFail(route) {
 				log.Printf("chaos: injecting 500 error for %s", route)
+				r = WithChaosError(r)
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusInternalServerError)
 				json.NewEncoder(w).Encode(map[string]string{
