@@ -13,6 +13,7 @@ import (
 
 	"github.com/harsh-mishra123/gateway-go/internal/admin"
 	"github.com/harsh-mishra123/gateway-go/internal/chaos"
+	"github.com/harsh-mishra123/gateway-go/internal/metrics"
 	"github.com/harsh-mishra123/gateway-go/internal/middleware"
 	"github.com/harsh-mishra123/gateway-go/internal/proxy"
 	"github.com/harsh-mishra123/gateway-go/internal/ratelimit"
@@ -30,15 +31,20 @@ func main() {
 	defer limiter.Stop()
 	chaosEngine := chaos.NewEngine(store)
 
+	// Metrics hub for real-time streaming to dashboard clients.
+	hub := metrics.NewHub()
+	go hub.Run()
+
 	// Reverse proxy to the real backend.
 	reverseProxy, err := proxy.NewProxy(*backend)
 	if err != nil {
 		log.Fatalf("failed to create proxy: %v", err)
 	}
 
-	// Build the middleware chain: logging -> rate limit -> chaos -> proxy.
+	// Build the middleware chain: metrics -> logging -> rate limit -> chaos -> proxy.
 	gatewayHandler := middleware.Chain(
 		reverseProxy,
+		middleware.Metrics(hub),
 		middleware.Logging(),
 		middleware.RateLimit(limiter),
 		middleware.Chaos(chaosEngine),
@@ -47,11 +53,15 @@ func main() {
 	// Admin API for rule management.
 	adminHandler := admin.NewHandler(store)
 
-	// Single mux that routes /api/* to admin and everything else through
-	// the gateway middleware chain.
+	// Single mux that routes /api/* to admin, /ws/* to WebSocket handlers,
+	// and everything else through the gateway middleware chain.
 	mux := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/api/") {
 			adminHandler.ServeHTTP(w, r)
+			return
+		}
+		if r.URL.Path == "/ws/metrics" {
+			hub.HandleWebSocket(w, r)
 			return
 		}
 		gatewayHandler.ServeHTTP(w, r)
@@ -68,6 +78,7 @@ func main() {
 	go func() {
 		log.Printf("gateway listening on :%s, forwarding to %s", *port, *backend)
 		log.Printf("admin API available at http://localhost:%s/api/", *port)
+		log.Printf("metrics WebSocket at ws://localhost:%s/ws/metrics", *port)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("server error: %v", err)
 		}
