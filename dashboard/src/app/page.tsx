@@ -385,7 +385,7 @@ export default function DashboardPage() {
               <ul className="footer-col-links">
                 <li><a className="footer-link" href="http://localhost:8080/api/health" target="_blank" rel="noopener noreferrer">API Health</a></li>
                 <li><a className="footer-link" href="https://github.com" target="_blank" rel="noopener noreferrer">Documentation</a></li>
-                <li><a className="footer-link" href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                <li><a className="footer-link" href="https://github.com/harsh-mishra123" target="_blank" rel="noopener noreferrer">GitHub</a></li>
               </ul>
             </div>
           </div>
