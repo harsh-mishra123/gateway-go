@@ -155,28 +155,28 @@ export function LatencyHeatmap({ events }: LatencyHeatmapProps) {
         <div className="heatmap-legend-item">
           <div
             className="heatmap-legend-color"
-            style={{ background: "#166534" }}
+            style={{ background: "var(--heat-cold)" }}
           />
           &lt;100ms
         </div>
         <div className="heatmap-legend-item">
           <div
             className="heatmap-legend-color"
-            style={{ background: "#854d0e" }}
+            style={{ background: "var(--heat-warm)" }}
           />
           100-300ms
         </div>
         <div className="heatmap-legend-item">
           <div
             className="heatmap-legend-color"
-            style={{ background: "#c2410c" }}
+            style={{ background: "var(--heat-hot)" }}
           />
           300-700ms
         </div>
         <div className="heatmap-legend-item">
           <div
             className="heatmap-legend-color"
-            style={{ background: "#dc2626" }}
+            style={{ background: "var(--heat-critical)" }}
           />
           &gt;700ms
         </div>
