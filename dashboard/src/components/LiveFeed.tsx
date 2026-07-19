@@ -1,6 +1,7 @@
 "use client";
 
 import { MetricEvent } from "@/lib/types";
+import { TrafficVolumeChart } from "./TrafficVolumeChart";
 
 interface LiveFeedProps {
   events: MetricEvent[];
@@ -34,61 +35,65 @@ function formatLatency(ms: number): string {
 
 export function LiveFeed({ events }: LiveFeedProps) {
   return (
-    <div className="feed-container">
-      <div className="feed-header">
-        <span className="feed-title">Live Request Feed</span>
-        <span className="feed-count">{events.length} events</span>
-      </div>
-      <div className="feed-scroll-area">
-        <table className="feed-table">
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Method</th>
-              <th>Route</th>
-              <th>Client IP</th>
-              <th>Status</th>
-              <th>Latency</th>
-              <th>Flags</th>
-            </tr>
-          </thead>
-          <tbody>
-            {events.map((event, i) => (
-              <tr key={`${event.timestamp}-${i}`} className={i < 3 ? "feed-row-enter" : ""}>
-                <td>{formatTime(event.timestamp)}</td>
-                <td>
-                  <span className={getMethodClass(event.method)}>
-                    {event.method}
-                  </span>
-                </td>
-                <td>{event.route}</td>
-                <td>{event.clientIP}</td>
-                <td>
-                  <span className={getStatusClass(event.statusCode)}>
-                    {event.statusCode}
-                  </span>
-                </td>
-                <td>{formatLatency(event.latencyMs)}</td>
-                <td>
-                  {event.rateLimited && (
-                    <span className="indicator rate-limited">throttled</span>
-                  )}
-                  {(event.chaosLatencyMs || event.chaosError) && (
-                    <span className="indicator chaos">chaos</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {events.length === 0 && (
+    <>
+      <TrafficVolumeChart events={events} />
+
+      <div className="feed-container">
+        <div className="feed-header">
+          <span className="feed-title">Live Request Feed</span>
+          <span className="feed-count">{events.length} events</span>
+        </div>
+        <div className="feed-scroll-area">
+          <table className="feed-table">
+            <thead>
               <tr>
-                <td colSpan={7} style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>
-                  Waiting for requests...
-                </td>
+                <th>Time</th>
+                <th>Method</th>
+                <th>Route</th>
+                <th>Client IP</th>
+                <th>Status</th>
+                <th>Latency</th>
+                <th>Flags</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {events.map((event, i) => (
+                <tr key={`${event.timestamp}-${i}`} className={i < 3 ? "feed-row-enter" : ""}>
+                  <td>{formatTime(event.timestamp)}</td>
+                  <td>
+                    <span className={getMethodClass(event.method)}>
+                      {event.method}
+                    </span>
+                  </td>
+                  <td>{event.route}</td>
+                  <td>{event.clientIP}</td>
+                  <td>
+                    <span className={getStatusClass(event.statusCode)}>
+                      {event.statusCode}
+                    </span>
+                  </td>
+                  <td>{formatLatency(event.latencyMs)}</td>
+                  <td>
+                    {event.rateLimited && (
+                      <span className="indicator rate-limited">throttled</span>
+                    )}
+                    {(event.chaosLatencyMs || event.chaosError) && (
+                      <span className="indicator chaos">chaos</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {events.length === 0 && (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>
+                    Waiting for requests...
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
