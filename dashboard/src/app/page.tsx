@@ -184,7 +184,7 @@ export default function DashboardPage() {
         <div style={{ marginTop: "48px", marginBottom: "96px" }}>
           {activeTab === "feed" && <LiveFeed events={events} />}
           {activeTab === "heatmap" && <LatencyHeatmap events={events} />}
-          {activeTab === "rules" && <RuleEditor />}
+          {activeTab === "rules" && <RuleEditor events={events} />}
         </div>
 
         <hr style={{ border: "none", borderTop: "1px solid var(--border-hairline)", margin: "96px 0" }} />

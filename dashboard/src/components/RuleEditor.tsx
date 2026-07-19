@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { RateLimitRule, ChaosRule } from "@/lib/types";
+import { RateLimitRule, ChaosRule, MetricEvent } from "@/lib/types";
 import {
   getRateLimitRules,
   addRateLimitRule,
@@ -10,6 +10,7 @@ import {
   addChaosRule,
   removeChaosRule,
 } from "@/lib/api";
+import { RuleImpactChart } from "./RuleImpactChart";
 
 interface Toast {
   id: number;
@@ -17,7 +18,11 @@ interface Toast {
   type: "success" | "error";
 }
 
-export function RuleEditor() {
+interface RuleEditorProps {
+  events: MetricEvent[];
+}
+
+export function RuleEditor({ events }: RuleEditorProps) {
   // Rate limit state
   const [rateLimitRules, setRateLimitRules] = useState<RateLimitRule[]>([]);
   const [rlRoute, setRlRoute] = useState("/");
@@ -134,6 +139,7 @@ export function RuleEditor() {
 
   return (
     <>
+      <RuleImpactChart events={events} />
       <div className="rules-container">
         {/* Rate Limit Section */}
         <div className="rule-section">
