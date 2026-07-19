@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { MetricEvent } from "@/lib/types";
+import { LatencyTrendChart } from "./LatencyTrendChart";
 
 interface LatencyHeatmapProps {
   events: MetricEvent[];
@@ -110,77 +111,81 @@ export function LatencyHeatmap({ events }: LatencyHeatmapProps) {
   }
 
   return (
-    <div className="heatmap-container">
-      <div className="heatmap-title">Latency Heatmap</div>
-      <div className="heatmap-grid">
-        {routes.map((route) => {
-          const cells = grid.get(route) || [];
-          return (
-            <div key={route} className="heatmap-row">
-              <span className="heatmap-route-label" title={route}>
-                {route}
-              </span>
-              {cells.map((cell, bucketIdx) => (
-                <div
-                  key={bucketIdx}
-                  className={getHeatClass(cell.count > 0 ? cell.avgLatency : 0)}
-                  onMouseEnter={() =>
-                    setHoveredCell({ route, bucket: bucketIdx })
-                  }
-                  onMouseLeave={() => setHoveredCell(null)}
-                  style={{ position: "relative" }}
-                >
-                  {hoveredCell?.route === route &&
-                    hoveredCell?.bucket === bucketIdx &&
-                    cell.count > 0 && (
-                      <div className="heatmap-tooltip">
-                        {Math.round(cell.avgLatency)}ms avg | {cell.count} req |{" "}
-                        {Math.round(cell.minLatency)}-{Math.round(cell.maxLatency)}ms
-                      </div>
-                    )}
-                </div>
-              ))}
-            </div>
-          );
-        })}
+    <>
+      <LatencyTrendChart events={events} />
+
+      <div className="heatmap-container">
+        <div className="heatmap-title">Latency Heatmap</div>
+        <div className="heatmap-grid">
+          {routes.map((route) => {
+            const cells = grid.get(route) || [];
+            return (
+              <div key={route} className="heatmap-row">
+                <span className="heatmap-route-label" title={route}>
+                  {route}
+                </span>
+                {cells.map((cell, bucketIdx) => (
+                  <div
+                    key={bucketIdx}
+                    className={getHeatClass(cell.count > 0 ? cell.avgLatency : 0)}
+                    onMouseEnter={() =>
+                      setHoveredCell({ route, bucket: bucketIdx })
+                    }
+                    onMouseLeave={() => setHoveredCell(null)}
+                    style={{ position: "relative" }}
+                  >
+                    {hoveredCell?.route === route &&
+                      hoveredCell?.bucket === bucketIdx &&
+                      cell.count > 0 && (
+                        <div className="heatmap-tooltip">
+                          {Math.round(cell.avgLatency)}ms avg | {cell.count} req |{" "}
+                          {Math.round(cell.minLatency)}-{Math.round(cell.maxLatency)}ms
+                        </div>
+                      )}
+                  </div>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+        <div className="heatmap-time-axis">
+          {timeLabels.map((label, i) => (
+            <span key={i} className="heatmap-time-label">
+              {label}
+            </span>
+          ))}
+        </div>
+        <div className="heatmap-legend">
+          <div className="heatmap-legend-item">
+            <div
+              className="heatmap-legend-color"
+              style={{ background: "var(--heat-cold)" }}
+            />
+            &lt;100ms
+          </div>
+          <div className="heatmap-legend-item">
+            <div
+              className="heatmap-legend-color"
+              style={{ background: "var(--heat-warm)" }}
+            />
+            100-300ms
+          </div>
+          <div className="heatmap-legend-item">
+            <div
+              className="heatmap-legend-color"
+              style={{ background: "var(--heat-hot)" }}
+            />
+            300-700ms
+          </div>
+          <div className="heatmap-legend-item">
+            <div
+              className="heatmap-legend-color"
+              style={{ background: "var(--heat-critical)" }}
+            />
+            &gt;700ms
+          </div>
+        </div>
       </div>
-      <div className="heatmap-time-axis">
-        {timeLabels.map((label, i) => (
-          <span key={i} className="heatmap-time-label">
-            {label}
-          </span>
-        ))}
-      </div>
-      <div className="heatmap-legend">
-        <div className="heatmap-legend-item">
-          <div
-            className="heatmap-legend-color"
-            style={{ background: "var(--heat-cold)" }}
-          />
-          &lt;100ms
-        </div>
-        <div className="heatmap-legend-item">
-          <div
-            className="heatmap-legend-color"
-            style={{ background: "var(--heat-warm)" }}
-          />
-          100-300ms
-        </div>
-        <div className="heatmap-legend-item">
-          <div
-            className="heatmap-legend-color"
-            style={{ background: "var(--heat-hot)" }}
-          />
-          300-700ms
-        </div>
-        <div className="heatmap-legend-item">
-          <div
-            className="heatmap-legend-color"
-            style={{ background: "var(--heat-critical)" }}
-          />
-          &gt;700ms
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
