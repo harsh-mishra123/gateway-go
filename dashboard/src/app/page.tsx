@@ -354,6 +354,48 @@ export default function DashboardPage() {
             </div>
           </div>
         </section>
+
+        <footer className="footer">
+          <div className="footer-grid">
+            <div className="footer-brand">
+              <div className="footer-brand-logo">gateway-go</div>
+              <p className="footer-brand-desc">
+                Observe and control API traffic with a high-performance HTTP reverse proxy, live metrics engine, and fault injection hub.
+              </p>
+            </div>
+            <div className="footer-col">
+              <span className="footer-col-title">Observability</span>
+              <ul className="footer-col-links">
+                <li><a className="footer-link" onClick={() => setActiveTab("feed")}>Live Traffic</a></li>
+                <li><a className="footer-link" onClick={() => setActiveTab("heatmap")}>Latency Heatmap</a></li>
+                <li><a className="footer-link" onClick={() => setActiveTab("rules")}>Traffic Rules</a></li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <span className="footer-col-title">Features</span>
+              <ul className="footer-col-links">
+                <li><span className="footer-link">Rule Store</span></li>
+                <li><span className="footer-link">Token Bucket</span></li>
+                <li><span className="footer-link">Chaos Engine</span></li>
+                <li><span className="footer-link">WebSocket Metrics</span></li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <span className="footer-col-title">Resources</span>
+              <ul className="footer-col-links">
+                <li><a className="footer-link" href="http://localhost:8080/api/health" target="_blank" rel="noopener noreferrer">API Health</a></li>
+                <li><a className="footer-link" href="https://github.com" target="_blank" rel="noopener noreferrer">Documentation</a></li>
+                <li><a className="footer-link" href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <span>&copy; 2026 gateway-go. All rights reserved.</span>
+            <span className="footer-bottom-joke">
+              High-performance proxying &mdash; not a latency guarantee.
+            </span>
+          </div>
+        </footer>
       </main>
     </div>
   );
