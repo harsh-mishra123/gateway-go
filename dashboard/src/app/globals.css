@@ -808,6 +808,131 @@ html, body {
   to { opacity: 0; }
 }
 
+/* ── Landing Cards ── */
+
+.landing-card {
+  border: 1px solid var(--border-hairline);
+  border-radius: 12px;
+  padding: 28px;
+  background: var(--bg-card);
+  transition: all 0.25s ease;
+  cursor: default;
+}
+
+.landing-card:hover {
+  border-color: var(--border-default);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  transform: translateY(-3px);
+}
+
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: transform 0.25s ease;
+}
+
+.landing-card:hover .icon-circle {
+  transform: scale(1.08);
+}
+
+.icon-circle svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--text-on-dark);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.step-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.problem-card {
+  border: 1px solid var(--border-hairline);
+  border-radius: 10px;
+  padding: 18px;
+  background: var(--bg-card);
+  transition: all 0.2s ease;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.problem-card:hover {
+  border-color: var(--border-default);
+  background: var(--bg-section);
+}
+
+.problem-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--status-error-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.problem-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--status-error);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.feature-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  transition: background 0.2s ease;
+}
+
+.landing-card:hover .feature-icon {
+  background: var(--accent);
+}
+
+.landing-card:hover .feature-icon svg {
+  stroke: var(--text-on-dark);
+}
+
+.feature-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--text-primary);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.2s ease;
+}
+
 /* ── Responsive ── */
 
 @media (max-width: 768px) {
