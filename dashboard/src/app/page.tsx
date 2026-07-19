@@ -207,36 +207,32 @@ export default function DashboardPage() {
             <p style={{ color: "var(--text-secondary)", marginBottom: "24px", fontSize: "15px" }}>
               In local development environments, APIs are always fast and reliable. In production, however, network latency spikes, rate limiters drop requests, and backends fail. Replicating these scenarios locally is typically painful and requires heavy setup.
             </p>
-            <div style={{ display: "grid", gap: "16px" }}>
-              <div
-                style={{
-                  border: "1px solid var(--border-hairline)",
-                  borderRadius: "10px",
-                  padding: "16px",
-                  background: "var(--bg-card)",
-                }}
-              >
-                <h4 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
-                  Silent Cascading Failures
-                </h4>
-                <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                  A minor latency spike in one service can consume resource pools and bring down the entire downstream application stack.
-                </p>
+            <div style={{ display: "grid", gap: "12px" }}>
+              <div className="problem-card">
+                <div className="problem-icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                </div>
+                <div>
+                  <h4 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+                    Silent Cascading Failures
+                  </h4>
+                  <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                    A minor latency spike in one service can consume resource pools and bring down the entire downstream application stack.
+                  </p>
+                </div>
               </div>
-              <div
-                style={{
-                  border: "1px solid var(--border-hairline)",
-                  borderRadius: "10px",
-                  padding: "16px",
-                  background: "var(--bg-card)",
-                }}
-              >
-                <h4 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
-                  Complex Integration Tests
-                </h4>
-                <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                  Simulating flaky services or throttling typically requires complex third-party tools or changes to codebase logic.
-                </p>
+              <div className="problem-card">
+                <div className="problem-icon">
+                  <svg viewBox="0 0 24 24"><path d="M18.364 5.636a9 9 0 0 1 0 12.728M5.636 18.364a9 9 0 0 1 0-12.728M15.536 8.464a5 5 0 0 1 0 7.072M8.464 15.536a5 5 0 0 1 0-7.072" /><circle cx="12" cy="12" r="1" fill="currentColor" /></svg>
+                </div>
+                <div>
+                  <h4 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+                    Complex Integration Tests
+                  </h4>
+                  <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                    Simulating flaky services or throttling typically requires complex third-party tools or changes to codebase logic.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -256,50 +252,26 @@ export default function DashboardPage() {
             </h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "24px" }}>
-            <div
-              style={{
-                border: "1px solid var(--border-hairline)",
-                borderRadius: "12px",
-                padding: "24px",
-                background: "var(--bg-card)",
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  color: "var(--text-muted)",
-                  fontSize: "12px",
-                  fontWeight: 500,
-                  marginBottom: "24px",
-                }}
-              >
-                01
+            <div className="landing-card">
+              <div className="step-header">
+                <div className="icon-circle">
+                  <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+                </div>
+                <span className="step-num">01</span>
               </div>
               <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
                 Route Traffic
               </h4>
               <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                Start gateway-go and point it to your backend. Point your clients (browsers, apps) to the gateway's port.
+                Start gateway-go and point it to your backend. Point your clients (browsers, apps) to the gateway&apos;s port.
               </p>
             </div>
-            <div
-              style={{
-                border: "1px solid var(--border-hairline)",
-                borderRadius: "12px",
-                padding: "24px",
-                background: "var(--bg-card)",
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  color: "var(--text-muted)",
-                  fontSize: "12px",
-                  fontWeight: 500,
-                  marginBottom: "24px",
-                }}
-              >
-                02
+            <div className="landing-card">
+              <div className="step-header">
+                <div className="icon-circle">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9 2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9 2.83-2.83" /></svg>
+                </div>
+                <span className="step-num">02</span>
               </div>
               <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
                 Apply Rules Live
@@ -308,24 +280,12 @@ export default function DashboardPage() {
                 Inject rate limit policies or chaos conditions like artificial latency and random failures via the dashboard rule editor.
               </p>
             </div>
-            <div
-              style={{
-                border: "1px solid var(--border-hairline)",
-                borderRadius: "12px",
-                padding: "24px",
-                background: "var(--bg-card)",
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  color: "var(--text-muted)",
-                  fontSize: "12px",
-                  fontWeight: 500,
-                  marginBottom: "24px",
-                }}
-              >
-                03
+            <div className="landing-card">
+              <div className="step-header">
+                <div className="icon-circle">
+                  <svg viewBox="0 0 24 24"><path d="M3 3v18h18" /><path d="m7 17 4-8 4 4 4-8" /></svg>
+                </div>
+                <span className="step-num">03</span>
               </div>
               <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
                 Analyze Behaviors
@@ -348,29 +308,21 @@ export default function DashboardPage() {
             </h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
-            <div
-              style={{
-                border: "1px solid var(--border-hairline)",
-                borderRadius: "12px",
-                padding: "24px",
-                background: "var(--bg-card)",
-              }}
-            >
+            <div className="landing-card">
+              <div className="feature-icon">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+              </div>
               <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
                 Thread-Safe Rule Store
               </h4>
               <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                An in-memory rule manager implemented using Go's concurrent design pattern (`sync.RWMutex`), supporting zero-downtime hot reloads.
+                An in-memory rule manager built on Go&apos;s concurrent design patterns with sync.RWMutex, supporting zero-downtime hot reloads.
               </p>
             </div>
-            <div
-              style={{
-                border: "1px solid var(--border-hairline)",
-                borderRadius: "12px",
-                padding: "24px",
-                background: "var(--bg-card)",
-              }}
-            >
+            <div className="landing-card">
+              <div className="feature-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg>
+              </div>
               <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
                 Token Bucket Rate Limiter
               </h4>
@@ -378,29 +330,21 @@ export default function DashboardPage() {
                 Enforce rate limiting using a custom-built low-overhead token bucket algorithm featuring lazy refills and automatic stale client cleanup.
               </p>
             </div>
-            <div
-              style={{
-                border: "1px solid var(--border-hairline)",
-                borderRadius: "12px",
-                padding: "24px",
-                background: "var(--bg-card)",
-              }}
-            >
+            <div className="landing-card">
+              <div className="feature-icon">
+                <svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" /></svg>
+              </div>
               <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
                 Active Chaos Engineering
               </h4>
               <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                Dynamically inject latencies (e.g. 500ms) or probabilistic HTTP failures (e.g. 10% errors) to test system resilience and recovery.
+                Dynamically inject latencies or probabilistic HTTP failures to test system resilience and recovery under realistic fault conditions.
               </p>
             </div>
-            <div
-              style={{
-                border: "1px solid var(--border-hairline)",
-                borderRadius: "12px",
-                padding: "24px",
-                background: "var(--bg-card)",
-              }}
-            >
+            <div className="landing-card">
+              <div className="feature-icon">
+                <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
+              </div>
               <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
                 WebSocket Metrics Pipeline
               </h4>
