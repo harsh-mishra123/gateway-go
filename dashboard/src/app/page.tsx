@@ -6,6 +6,7 @@ import { ConnectionStatus } from "@/components/ConnectionStatus";
 import { LiveFeed } from "@/components/LiveFeed";
 import { LatencyHeatmap } from "@/components/LatencyHeatmap";
 import { RuleEditor } from "@/components/RuleEditor";
+import { ProxyFlowVisual } from "@/components/ProxyFlowVisual";
 
 const WS_URL = "ws://localhost:8080/ws/metrics";
 
@@ -78,6 +79,7 @@ export default function DashboardPage() {
       </header>
 
       <main className="main-content">
+        {/* HERO SECTION */}
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <div
             className="indicator"
@@ -153,6 +155,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* METRICS & WORKSPACE PANEL */}
         <div className="stats-bar">
           <div className="stat-card">
             <div className="stat-label">Total Requests</div>
@@ -178,11 +181,235 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div style={{ marginTop: "48px" }}>
+        <div style={{ marginTop: "48px", marginBottom: "96px" }}>
           {activeTab === "feed" && <LiveFeed events={events} />}
           {activeTab === "heatmap" && <LatencyHeatmap events={events} />}
           {activeTab === "rules" && <RuleEditor />}
         </div>
+
+        <hr style={{ border: "none", borderTop: "1px solid var(--border-hairline)", margin: "96px 0" }} />
+
+        {/* SECTION 2: THE PROBLEM */}
+        <section
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "64px",
+            alignItems: "center",
+            marginBottom: "96px",
+          }}
+        >
+          <div>
+            <div className="section-label">The Problem</div>
+            <h2 className="section-heading" style={{ fontSize: "36px", marginBottom: "20px" }}>
+              Microservice failures go undetected — until production crashes.
+            </h2>
+            <p style={{ color: "var(--text-secondary)", marginBottom: "24px", fontSize: "15px" }}>
+              In local development environments, APIs are always fast and reliable. In production, however, network latency spikes, rate limiters drop requests, and backends fail. Replicating these scenarios locally is typically painful and requires heavy setup.
+            </p>
+            <div style={{ display: "grid", gap: "16px" }}>
+              <div
+                style={{
+                  border: "1px solid var(--border-hairline)",
+                  borderRadius: "10px",
+                  padding: "16px",
+                  background: "var(--bg-card)",
+                }}
+              >
+                <h4 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+                  Silent Cascading Failures
+                </h4>
+                <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                  A minor latency spike in one service can consume resource pools and bring down the entire downstream application stack.
+                </p>
+              </div>
+              <div
+                style={{
+                  border: "1px solid var(--border-hairline)",
+                  borderRadius: "10px",
+                  padding: "16px",
+                  background: "var(--bg-card)",
+                }}
+              >
+                <h4 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+                  Complex Integration Tests
+                </h4>
+                <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                  Simulating flaky services or throttling typically requires complex third-party tools or changes to codebase logic.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <ProxyFlowVisual />
+          </div>
+        </section>
+
+        <hr style={{ border: "none", borderTop: "1px solid var(--border-hairline)", margin: "96px 0" }} />
+
+        {/* SECTION 3: HOW IT WORKS */}
+        <section style={{ marginBottom: "96px" }}>
+          <div style={{ textAlign: "center", marginBottom: "48px" }}>
+            <div className="section-label">How it works</div>
+            <h2 className="section-heading" style={{ fontSize: "36px" }}>
+              Three steps to test system resilience.
+            </h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "24px" }}>
+            <div
+              style={{
+                border: "1px solid var(--border-hairline)",
+                borderRadius: "12px",
+                padding: "24px",
+                background: "var(--bg-card)",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  color: "var(--text-muted)",
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  marginBottom: "24px",
+                }}
+              >
+                01
+              </div>
+              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
+                Route Traffic
+              </h4>
+              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                Start gateway-go and point it to your backend. Point your clients (browsers, apps) to the gateway's port.
+              </p>
+            </div>
+            <div
+              style={{
+                border: "1px solid var(--border-hairline)",
+                borderRadius: "12px",
+                padding: "24px",
+                background: "var(--bg-card)",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  color: "var(--text-muted)",
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  marginBottom: "24px",
+                }}
+              >
+                02
+              </div>
+              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
+                Apply Rules Live
+              </h4>
+              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                Inject rate limit policies or chaos conditions like artificial latency and random failures via the dashboard rule editor.
+              </p>
+            </div>
+            <div
+              style={{
+                border: "1px solid var(--border-hairline)",
+                borderRadius: "12px",
+                padding: "24px",
+                background: "var(--bg-card)",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  color: "var(--text-muted)",
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  marginBottom: "24px",
+                }}
+              >
+                03
+              </div>
+              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
+                Analyze Behaviors
+              </h4>
+              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                Watch requests flow in real-time, monitor latency heatmaps, and verify that your application correctly handles degraded states.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <hr style={{ border: "none", borderTop: "1px solid var(--border-hairline)", margin: "96px 0" }} />
+
+        {/* SECTION 4: FEATURES */}
+        <section style={{ marginBottom: "96px" }}>
+          <div style={{ textAlign: "center", marginBottom: "48px" }}>
+            <div className="section-label">Features</div>
+            <h2 className="section-heading" style={{ fontSize: "36px" }}>
+              Core capabilities for traffic observation.
+            </h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
+            <div
+              style={{
+                border: "1px solid var(--border-hairline)",
+                borderRadius: "12px",
+                padding: "24px",
+                background: "var(--bg-card)",
+              }}
+            >
+              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
+                Thread-Safe Rule Store
+              </h4>
+              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                An in-memory rule manager implemented using Go's concurrent design pattern (`sync.RWMutex`), supporting zero-downtime hot reloads.
+              </p>
+            </div>
+            <div
+              style={{
+                border: "1px solid var(--border-hairline)",
+                borderRadius: "12px",
+                padding: "24px",
+                background: "var(--bg-card)",
+              }}
+            >
+              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
+                Token Bucket Rate Limiter
+              </h4>
+              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                Enforce rate limiting using a custom-built low-overhead token bucket algorithm featuring lazy refills and automatic stale client cleanup.
+              </p>
+            </div>
+            <div
+              style={{
+                border: "1px solid var(--border-hairline)",
+                borderRadius: "12px",
+                padding: "24px",
+                background: "var(--bg-card)",
+              }}
+            >
+              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
+                Active Chaos Engineering
+              </h4>
+              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                Dynamically inject latencies (e.g. 500ms) or probabilistic HTTP failures (e.g. 10% errors) to test system resilience and recovery.
+              </p>
+            </div>
+            <div
+              style={{
+                border: "1px solid var(--border-hairline)",
+                borderRadius: "12px",
+                padding: "24px",
+                background: "var(--bg-card)",
+              }}
+            >
+              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
+                WebSocket Metrics Pipeline
+              </h4>
+              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                Every request event is instantly broadcasted to connected dashboards over WebSockets, separated entirely from the hot proxy pipeline.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
