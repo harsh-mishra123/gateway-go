@@ -1321,6 +1321,91 @@ html, body {
   z-index: 2;
 }
 
+/* ── Auth Pages (Clerk) ── */
+
+.auth-page-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-page);
+}
+
+/* Hide Clerk branding & footer elements */
+.cl-footer,
+.cl-internal-ph9kg9,
+[class*="cl-footer"],
+.cl-dev-mode-badge,
+[class*="cl-dev-mode-badge"] {
+  display: none !important;
+}
+
+.auth-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border-hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-hairline) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.5;
+  mask-image: radial-gradient(circle at 50% 50%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 20%, transparent 70%);
+  pointer-events: none;
+}
+
+.auth-bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.auth-bg-glow--1 {
+  width: 500px;
+  height: 500px;
+  background: var(--status-info);
+  top: -120px;
+  right: -80px;
+}
+
+.auth-bg-glow--2 {
+  width: 400px;
+  height: 400px;
+  background: var(--status-success);
+  bottom: -100px;
+  left: -60px;
+}
+
+/* ── Landing Page CTA ── */
+
+.login-cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.login-cta-group .login-submit {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  margin-top: 0;
+}
+
+.login-submit--secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+}
+
+.login-submit--secondary:hover {
+  background: var(--bg-elevated);
+  transform: translateY(-1px);
+}
+
 /* ── Responsive ── */
 
 @media (max-width: 768px) {
@@ -1339,4 +1424,8 @@ html, body {
   .login-card {
     padding: 28px 20px;
   }
+  .auth-page-container {
+    padding: 24px 16px;
+  }
 }
+

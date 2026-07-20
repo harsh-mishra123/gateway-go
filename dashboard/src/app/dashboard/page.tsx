@@ -8,6 +8,7 @@ import { LatencyHeatmap } from "@/components/LatencyHeatmap";
 import { RuleEditor } from "@/components/RuleEditor";
 import { ProxyFlowVisual } from "@/components/ProxyFlowVisual";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { UserButton } from "@clerk/nextjs";
 
 const WS_URL = "ws://localhost:8080/ws/metrics";
 
@@ -77,6 +78,7 @@ export default function DashboardPage() {
           >
             API Health
           </a>
+          <UserButton />
         </div>
       </header>
 
