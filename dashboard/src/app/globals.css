@@ -20,6 +20,7 @@
   --text-secondary: #52525b;
   --text-muted: #a1a1aa;
   --text-on-dark: #ffffff;
+  --text-on-accent: #ffffff;
 
   /* accent -- single strong color, used sparingly */
   --accent: #18181b;
@@ -88,6 +89,7 @@
   --text-secondary: #a1a1aa;
   --text-muted: #52525b;
   --text-on-dark: #fafafa;
+  --text-on-accent: #09090b;
 
   --accent: #fafafa;
   --accent-hover: #e4e4e7;
@@ -755,7 +757,7 @@ html, body {
 
 .btn-primary {
   background: var(--accent);
-  color: var(--text-on-dark);
+  color: var(--text-on-accent);
 }
 
 .btn-primary:hover {
@@ -853,7 +855,7 @@ html, body {
 
 .toast.success {
   background: var(--accent);
-  color: var(--text-on-dark);
+  color: var(--text-on-accent);
 }
 
 .toast.error {
