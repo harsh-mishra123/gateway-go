@@ -1,402 +1,130 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useWebSocket } from "@/hooks/useWebSocket";
-import { ConnectionStatus } from "@/components/ConnectionStatus";
-import { LiveFeed } from "@/components/LiveFeed";
-import { LatencyHeatmap } from "@/components/LatencyHeatmap";
-import { RuleEditor } from "@/components/RuleEditor";
-import { ProxyFlowVisual } from "@/components/ProxyFlowVisual";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
-const WS_URL = "ws://localhost:8080/ws/metrics";
+export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-type Tab = "feed" | "heatmap" | "rules";
+  const handleEmailLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // For demo purposes, any credentials work.
+    // In production, validate against your auth backend.
+    router.push("/dashboard");
+  };
 
-export default function DashboardPage() {
-  const { events, connectionStatus } = useWebSocket(WS_URL);
-  const [activeTab, setActiveTab] = useState<Tab>("feed");
+  const handleGoogleLogin = () => {
+    // In production: redirect to Google OAuth flow
+    // window.location.href = "/api/auth/google";
+    router.push("/dashboard");
+  };
 
-  const stats = useMemo(() => {
-    if (events.length === 0) {
-      return { total: 0, avgLatency: 0, errorRate: 0, rateLimited: 0 };
-    }
-    const total = events.length;
-    const avgLatency =
-      events.reduce((sum, e) => sum + e.latencyMs, 0) / total;
-    const errors = events.filter((e) => e.statusCode >= 500).length;
-    const rateLimited = events.filter((e) => e.rateLimited).length;
-    return {
-      total,
-      avgLatency: Math.round(avgLatency),
-      errorRate: Math.round((errors / total) * 100),
-      rateLimited,
-    };
-  }, [events]);
+  const handleGitHubLogin = () => {
+    // In production: redirect to GitHub OAuth flow
+    // window.location.href = "/api/auth/github";
+    router.push("/dashboard");
+  };
 
   return (
-    <div className="app-container">
-      <header className="header">
-        <div className="header-left">
-          <span className="header-logo">gateway-go</span>
-        </div>
-        <nav className="header-nav">
-          <button
-            className={`header-nav-link ${activeTab === "feed" ? "active" : ""}`}
-            onClick={() => setActiveTab("feed")}
-          >
-            Live Traffic
-          </button>
-          <button
-            className={`header-nav-link ${activeTab === "heatmap" ? "active" : ""}`}
-            onClick={() => setActiveTab("heatmap")}
-          >
-            Latency Heatmap
-          </button>
-          <button
-            className={`header-nav-link ${activeTab === "rules" ? "active" : ""}`}
-            onClick={() => setActiveTab("rules")}
-          >
-            Traffic Rules
-          </button>
-        </nav>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <ConnectionStatus status={connectionStatus} />
-          <a
-            href="http://localhost:8080/api/health"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary"
-            style={{
-              padding: "6px 14px",
-              fontSize: "13px",
-              textDecoration: "none",
-              borderRadius: "100px",
-            }}
-          >
-            API Health
-          </a>
-        </div>
-      </header>
+    <div className="login-container">
+      {/* Background visual elements */}
+      <div className="login-bg-grid" />
+      <div className="login-bg-glow login-bg-glow--1" />
+      <div className="login-bg-glow login-bg-glow--2" />
 
-      <main className="main-content">
-        {/* HERO SECTION */}
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <div
-            className="indicator"
-            style={{
-              background: "var(--bg-elevated)",
-              color: "var(--text-secondary)",
-              padding: "4px 12px",
-              borderRadius: "100px",
-              fontSize: "12px",
-              textTransform: "none",
-              fontWeight: 500,
-              marginBottom: "16px",
-              marginLeft: 0,
-            }}
-          >
-            <span style={{ color: "var(--status-success)", marginRight: "6px" }}>●</span>
-            Active Traffic Gateway
-          </div>
-          <h1
-            className="section-heading"
-            style={{
-              fontSize: "44px",
-              letterSpacing: "-1.5px",
-              fontWeight: 800,
-              maxWidth: "600px",
-              margin: "0 auto 16px auto",
-            }}
-          >
-            Control and observe traffic in real-time.
-          </h1>
-          <p
-            style={{
-              color: "var(--text-secondary)",
-              fontSize: "16px",
-              maxWidth: "500px",
-              margin: "0 auto 32px auto",
-            }}
-          >
-            A lightweight, programmatically controlled reverse proxy to manage rate limits,
-            inject chaos, and analyze latency.
+      {/* Theme toggle in corner */}
+      <div className="login-theme-toggle">
+        <ThemeToggle />
+      </div>
+
+      <div className="login-card">
+        <div className="login-header">
+          <div className="login-logo">gateway-go</div>
+          <p className="login-subtitle">
+            Sign in to monitor and control your API gateway
           </p>
-
-          {/* Code display block mimicking reference image */}
-          <div
-            style={{
-              background: "var(--bg-code)",
-              borderRadius: "12px",
-              padding: "20px 24px",
-              textAlign: "left",
-              maxWidth: "540px",
-              margin: "0 auto 48px auto",
-              boxShadow: "var(--shadow-md)",
-              fontFamily: "var(--font-mono)",
-              fontSize: "13px",
-              color: "#a1a1aa",
-              lineHeight: "1.7",
-            }}
-          >
-            <div style={{ display: "flex", gap: "6px", marginBottom: "16px" }}>
-              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#ef4444" }}></span>
-              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#eab308" }}></span>
-              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e" }}></span>
-            </div>
-            <div style={{ color: "#71717a", marginBottom: "4px" }}># active gateway routing rule</div>
-            <div>
-              <span style={{ color: "var(--status-info)" }}>forward</span> /* &rarr; http://localhost:4000
-            </div>
-            <div style={{ color: "#71717a", margin: "12px 0 4px 0" }}># request flow lifecycle</div>
-            <div>
-              logging &rarr; <span style={{ color: "var(--status-warning)" }}>rate-limit</span> &rarr;{" "}
-              <span style={{ color: "#a855f7" }}>chaos-injection</span> &rarr; reverse-proxy
-            </div>
-          </div>
         </div>
 
-        {/* METRICS & WORKSPACE PANEL */}
-        <div className="stats-bar">
-          <div className="stat-card">
-            <div className="stat-label">Total Requests</div>
-            <div className="stat-value info">{stats.total}</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-label">Avg Latency</div>
-            <div className="stat-value success">
-              {stats.avgLatency}
-              <span className="stat-unit">ms</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-label">Error Rate</div>
-            <div className="stat-value error">
-              {stats.errorRate}
-              <span className="stat-unit">%</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-label">Rate Limited</div>
-            <div className="stat-value warning">{stats.rateLimited}</div>
-          </div>
+        {/* Social Login Buttons */}
+        <div className="login-social-group">
+          <button className="login-social-btn" onClick={handleGoogleLogin}>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1Z"
+                fill="#4285F4"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23Z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62Z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53Z"
+                fill="#EA4335"
+              />
+            </svg>
+            Continue with Google
+          </button>
+
+          <button className="login-social-btn" onClick={handleGitHubLogin}>
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10Z"
+              />
+            </svg>
+            Continue with GitHub
+          </button>
         </div>
 
-        <div style={{ marginTop: "48px", marginBottom: "96px" }}>
-          {activeTab === "feed" && <LiveFeed events={events} />}
-          {activeTab === "heatmap" && <LatencyHeatmap events={events} />}
-          {activeTab === "rules" && <RuleEditor events={events} />}
+        {/* Divider */}
+        <div className="login-divider">
+          <span>or continue with email</span>
         </div>
 
-        <hr style={{ border: "none", borderTop: "1px solid var(--border-hairline)", margin: "96px 0" }} />
+        {/* Email/Password Form */}
+        <form className="login-form" onSubmit={handleEmailLogin}>
+          <div className="login-field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+            />
+          </div>
+          <div className="login-field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+          </div>
+          <button type="submit" className="login-submit">
+            Sign In
+          </button>
+        </form>
 
-        {/* SECTION 2: THE PROBLEM */}
-        <section
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "64px",
-            alignItems: "center",
-            marginBottom: "96px",
-          }}
-        >
-          <div>
-            <div className="section-label">The Problem</div>
-            <h2 className="section-heading" style={{ fontSize: "36px", marginBottom: "20px" }}>
-              Microservice failures go undetected — until production crashes.
-            </h2>
-            <p style={{ color: "var(--text-secondary)", marginBottom: "24px", fontSize: "15px" }}>
-              In local development environments, APIs are always fast and reliable. In production, however, network latency spikes, rate limiters drop requests, and backends fail. Replicating these scenarios locally is typically painful and requires heavy setup.
-            </p>
-            <div style={{ display: "grid", gap: "12px" }}>
-              <div className="problem-card">
-                <div className="problem-icon">
-                  <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
-                </div>
-                <div>
-                  <h4 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
-                    Silent Cascading Failures
-                  </h4>
-                  <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                    A minor latency spike in one service can consume resource pools and bring down the entire downstream application stack.
-                  </p>
-                </div>
-              </div>
-              <div className="problem-card">
-                <div className="problem-icon">
-                  <svg viewBox="0 0 24 24"><path d="M18.364 5.636a9 9 0 0 1 0 12.728M5.636 18.364a9 9 0 0 1 0-12.728M15.536 8.464a5 5 0 0 1 0 7.072M8.464 15.536a5 5 0 0 1 0-7.072" /><circle cx="12" cy="12" r="1" fill="currentColor" /></svg>
-                </div>
-                <div>
-                  <h4 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
-                    Complex Integration Tests
-                  </h4>
-                  <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                    Simulating flaky services or throttling typically requires complex third-party tools or changes to codebase logic.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <ProxyFlowVisual />
-          </div>
-        </section>
-
-        <hr style={{ border: "none", borderTop: "1px solid var(--border-hairline)", margin: "96px 0" }} />
-
-        {/* SECTION 3: HOW IT WORKS */}
-        <section style={{ marginBottom: "96px" }}>
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <div className="section-label">How it works</div>
-            <h2 className="section-heading" style={{ fontSize: "36px" }}>
-              Three steps to test system resilience.
-            </h2>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "24px" }}>
-            <div className="landing-card">
-              <div className="step-header">
-                <div className="icon-circle">
-                  <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
-                </div>
-                <span className="step-num">01</span>
-              </div>
-              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
-                Route Traffic
-              </h4>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                Start gateway-go and point it to your backend. Point your clients (browsers, apps) to the gateway&apos;s port.
-              </p>
-            </div>
-            <div className="landing-card">
-              <div className="step-header">
-                <div className="icon-circle">
-                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9 2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9 2.83-2.83" /></svg>
-                </div>
-                <span className="step-num">02</span>
-              </div>
-              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
-                Apply Rules Live
-              </h4>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                Inject rate limit policies or chaos conditions like artificial latency and random failures via the dashboard rule editor.
-              </p>
-            </div>
-            <div className="landing-card">
-              <div className="step-header">
-                <div className="icon-circle">
-                  <svg viewBox="0 0 24 24"><path d="M3 3v18h18" /><path d="m7 17 4-8 4 4 4-8" /></svg>
-                </div>
-                <span className="step-num">03</span>
-              </div>
-              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
-                Analyze Behaviors
-              </h4>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                Watch requests flow in real-time, monitor latency heatmaps, and verify that your application correctly handles degraded states.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <hr style={{ border: "none", borderTop: "1px solid var(--border-hairline)", margin: "96px 0" }} />
-
-        {/* SECTION 4: FEATURES */}
-        <section style={{ marginBottom: "96px" }}>
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <div className="section-label">Features</div>
-            <h2 className="section-heading" style={{ fontSize: "36px" }}>
-              Core capabilities for traffic observation.
-            </h2>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
-            <div className="landing-card">
-              <div className="feature-icon">
-                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-              </div>
-              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
-                Thread-Safe Rule Store
-              </h4>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                An in-memory rule manager built on Go&apos;s concurrent design patterns with sync.RWMutex, supporting zero-downtime hot reloads.
-              </p>
-            </div>
-            <div className="landing-card">
-              <div className="feature-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg>
-              </div>
-              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
-                Token Bucket Rate Limiter
-              </h4>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                Enforce rate limiting using a custom-built low-overhead token bucket algorithm featuring lazy refills and automatic stale client cleanup.
-              </p>
-            </div>
-            <div className="landing-card">
-              <div className="feature-icon">
-                <svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" /></svg>
-              </div>
-              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
-                Active Chaos Engineering
-              </h4>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                Dynamically inject latencies or probabilistic HTTP failures to test system resilience and recovery under realistic fault conditions.
-              </p>
-            </div>
-            <div className="landing-card">
-              <div className="feature-icon">
-                <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
-              </div>
-              <h4 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "8px" }}>
-                WebSocket Metrics Pipeline
-              </h4>
-              <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
-                Every request event is instantly broadcasted to connected dashboards over WebSockets, separated entirely from the hot proxy pipeline.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <footer className="footer">
-          <div className="footer-grid">
-            <div className="footer-brand">
-              <div className="footer-brand-logo">gateway-go</div>
-              <p className="footer-brand-desc">
-                Observe and control API traffic with a high-performance HTTP reverse proxy, live metrics engine, and fault injection hub.
-              </p>
-            </div>
-            <div className="footer-col">
-              <span className="footer-col-title">Observability</span>
-              <ul className="footer-col-links">
-                <li><a className="footer-link" onClick={() => setActiveTab("feed")}>Live Traffic</a></li>
-                <li><a className="footer-link" onClick={() => setActiveTab("heatmap")}>Latency Heatmap</a></li>
-                <li><a className="footer-link" onClick={() => setActiveTab("rules")}>Traffic Rules</a></li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <span className="footer-col-title">Features</span>
-              <ul className="footer-col-links">
-                <li><span className="footer-link">Rule Store</span></li>
-                <li><span className="footer-link">Token Bucket</span></li>
-                <li><span className="footer-link">Chaos Engine</span></li>
-                <li><span className="footer-link">WebSocket Metrics</span></li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <span className="footer-col-title">Resources</span>
-              <ul className="footer-col-links">
-                <li><a className="footer-link" href="http://localhost:8080/api/health" target="_blank" rel="noopener noreferrer">API Health</a></li>
-                <li><a className="footer-link" href="https://github.com" target="_blank" rel="noopener noreferrer">Documentation</a></li>
-                <li><a className="footer-link" href="https://github.com/harsh-mishra123" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <span>&copy; 2026 gateway-go. All rights reserved.</span>
-            <span className="footer-bottom-joke">
-              High-performance proxying &mdash; not a latency guarantee.
-            </span>
-          </div>
-        </footer>
-      </main>
+        <div className="login-footer">
+          <p>
+            Don&apos;t have an account?{" "}
+            <a href="#">Create one</a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
