@@ -26,4 +26,4 @@ USER gateway
 EXPOSE 8080
 
 ENTRYPOINT ["/app/gateway"]
-CMD ["-port=8080", "-backend=http://mock-backend:4000"]
+CMD ["-port=8080"]

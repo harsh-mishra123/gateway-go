@@ -23,7 +23,11 @@ import (
 )
 
 func main() {
-	backend := flag.String("backend", "http://localhost:4000", "backend server URL to proxy to")
+	defaultBackend := os.Getenv("BACKEND_URL")
+	if defaultBackend == "" {
+		defaultBackend = "https://httpbin.org"
+	}
+	backend := flag.String("backend", defaultBackend, "backend server URL to proxy to")
 	port := flag.String("port", "8080", "port the gateway listens on")
 	flag.Parse()
 
