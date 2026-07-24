@@ -38,7 +38,7 @@ export function LatencyHeatmap({ events }: LatencyHeatmapProps) {
   } | null>(null);
 
   const { routes, grid, timeLabels } = useMemo(() => {
-    const now = Date.now();
+    const now = events.length > 0 ? new Date(events[0].timestamp).getTime() : 0;
     const routeSet = new Set<string>();
     const bucketMap = new Map<string, CellData[]>();
 

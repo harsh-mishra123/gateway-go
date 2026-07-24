@@ -52,24 +52,31 @@ export function RuleEditor({ events }: RuleEditorProps) {
     []
   );
 
-  const fetchRules = useCallback(async () => {
-    try {
-      const [rl, chaos] = await Promise.all([
-        getRateLimitRules(),
-        getChaosRules(),
-      ]);
-      setRateLimitRules(rl || []);
-      setChaosRules(chaos || []);
-    } catch {
-      // Gateway might not be running yet.
-    }
-  }, []);
+
 
   useEffect(() => {
-    fetchRules();
-    const interval = setInterval(fetchRules, 5000);
-    return () => clearInterval(interval);
-  }, [fetchRules]);
+    let isMounted = true;
+    const loadRules = async () => {
+      try {
+        const [rl, chaos] = await Promise.all([
+          getRateLimitRules(),
+          getChaosRules(),
+        ]);
+        if (isMounted) {
+          setRateLimitRules(rl || []);
+          setChaosRules(chaos || []);
+        }
+      } catch {
+        // Gateway might not be running yet.
+      }
+    };
+    void loadRules();
+    const interval = setInterval(loadRules, 5000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleAddRateLimit = async (e: React.FormEvent) => {
     e.preventDefault();

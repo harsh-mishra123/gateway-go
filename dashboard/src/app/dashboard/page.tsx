@@ -211,7 +211,7 @@ export default function DashboardPage() {
             </div>
             <div style={{ color: "#71717a", marginBottom: "4px" }}># active gateway routing rule</div>
             <div>
-              <span style={{ color: "var(--status-info)" }}>forward</span> /* &rarr; http://localhost:4000
+              <span style={{ color: "var(--status-info)" }}>forward</span> {"/*"} &rarr; http://localhost:4000
             </div>
             <div style={{ color: "#71717a", margin: "12px 0 4px 0" }}># request flow lifecycle</div>
             <div>

@@ -22,6 +22,20 @@ export function useWebSocket(url: string): UseWebSocketReturn {
   const reconnectAttempts = useRef(0);
   const reconnectTimer = useRef<NodeJS.Timeout | null>(null);
 
+  const connectRef = useRef<() => void>(() => {});
+
+  const scheduleReconnect = useCallback(() => {
+    const delay = Math.min(
+      RECONNECT_BASE_DELAY * Math.pow(2, reconnectAttempts.current),
+      RECONNECT_MAX_DELAY
+    );
+    reconnectAttempts.current++;
+
+    reconnectTimer.current = setTimeout(() => {
+      connectRef.current();
+    }, delay);
+  }, []);
+
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
 
@@ -59,18 +73,10 @@ export function useWebSocket(url: string): UseWebSocketReturn {
     ws.onerror = () => {
       ws.close();
     };
-  }, [url]);
+  }, [url, scheduleReconnect]);
 
-  const scheduleReconnect = useCallback(() => {
-    const delay = Math.min(
-      RECONNECT_BASE_DELAY * Math.pow(2, reconnectAttempts.current),
-      RECONNECT_MAX_DELAY
-    );
-    reconnectAttempts.current++;
-
-    reconnectTimer.current = setTimeout(() => {
-      connect();
-    }, delay);
+  useEffect(() => {
+    connectRef.current = connect;
   }, [connect]);
 
   useEffect(() => {
