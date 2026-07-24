@@ -11,7 +11,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserButton } from "@clerk/nextjs";
 
 const WS_URL =
-  process.env.NEXT_PUBLIC_GATEWAY_WS_URL || "ws://localhost:8080/ws/metrics";
+  process.env.NEXT_PUBLIC_GATEWAY_WS_URL || "wss://gateway-go.onrender.com/ws/metrics";
 
 type Tab = "feed" | "heatmap" | "rules";
 

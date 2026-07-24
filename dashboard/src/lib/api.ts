@@ -1,7 +1,7 @@
 import { RateLimitRule, ChaosRule } from "./types";
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_GATEWAY_API_URL || "http://localhost:8080/api";
+  process.env.NEXT_PUBLIC_GATEWAY_API_URL || "https://gateway-go.onrender.com/api";
 
 async function request<T>(
   path: string,
