@@ -1,0 +1,48 @@
+name: gateway-go-stack
+
+services:
+  mock-backend:
+    image: python:3.11-alpine
+    container_name: mock-backend
+    command: python -m http.server 4000
+    ports:
+      - "4000:4000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:4000/"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gateway-go
+    ports:
+      - "8080:8080"
+    command: ["-port=8080", "-backend=http://mock-backend:4000"]
+    depends_on:
+      mock-backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8080/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: gateway-dashboard
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./dashboard/.env.local
+    depends_on:
+      gateway:
+        condition: service_healthy
+
+networks:
+  default:
+    name: gateway-network
