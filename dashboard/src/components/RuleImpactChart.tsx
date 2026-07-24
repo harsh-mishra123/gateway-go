@@ -33,7 +33,7 @@ export function RuleImpactChart({ events }: RuleImpactChartProps) {
         const diffSeconds = Math.floor((now - eventTime) / 1000);
         if (diffSeconds >= 0 && diffSeconds < 30) {
           const idx = 29 - diffSeconds;
-          if (event.rateLimited) {
+          if (event.rateLimited || event.statusCode === 429) {
             newBins[idx].throttled++;
           } else if (event.chaosError || (event.chaosLatencyMs && event.chaosLatencyMs > 0)) {
             newBins[idx].chaos++;

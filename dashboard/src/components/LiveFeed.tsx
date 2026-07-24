@@ -74,7 +74,7 @@ export function LiveFeed({ events }: LiveFeedProps) {
                   </td>
                   <td>{formatLatency(event.latencyMs)}</td>
                   <td>
-                    {event.rateLimited && (
+                    {(event.rateLimited || event.statusCode === 429) && (
                       <span className="indicator rate-limited">throttled</span>
                     )}
                     {(event.chaosLatencyMs || event.chaosError) && (

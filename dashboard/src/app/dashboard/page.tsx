@@ -26,7 +26,7 @@ export default function DashboardPage() {
     const avgLatency =
       events.reduce((sum, e) => sum + e.latencyMs, 0) / total;
     const errors = events.filter((e) => e.statusCode >= 500).length;
-    const rateLimited = events.filter((e) => e.rateLimited).length;
+    const rateLimited = events.filter((e) => e.rateLimited || e.statusCode === 429).length;
     return {
       total,
       avgLatency: Math.round(avgLatency),
