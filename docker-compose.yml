@@ -38,7 +38,10 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ./dashboard/.env.local
+      - path: ./dashboard/.env.local
+        required: false
+      - path: ./dashboard/.env.example
+        required: false
     depends_on:
       gateway:
         condition: service_healthy
