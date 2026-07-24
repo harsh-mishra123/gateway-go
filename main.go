@@ -59,7 +59,7 @@ func main() {
 	// Admin API for rule management, with CORS so the dashboard (port 3000)
 	// can call the admin API (port 8080).
 	corsHandler := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:3000"},
+		AllowedOrigins: []string{"http://localhost:3000", "https://gateway-go.vercel.app"},
 		AllowedMethods: []string{"GET", "POST", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Content-Type"},
 	})

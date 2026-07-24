@@ -1,6 +1,7 @@
 import { RateLimitRule, ChaosRule } from "./types";
 
-const API_BASE = "http://localhost:8080/api";
+const API_BASE =
+  process.env.NEXT_PUBLIC_GATEWAY_API_URL || "http://localhost:8080/api";
 
 async function request<T>(
   path: string,
