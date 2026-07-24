@@ -56,6 +56,8 @@ export default function DashboardPage() {
     };
   }, [events]);
 
+  const [copied, setCopied] = useState(false);
+
   return (
     <div className="app-container">
       <header className="header">
@@ -204,14 +206,34 @@ export default function DashboardPage() {
               lineHeight: "1.7",
             }}
           >
-            <div style={{ display: "flex", gap: "6px", marginBottom: "16px" }}>
-              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#ef4444" }}></span>
-              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#eab308" }}></span>
-              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e" }}></span>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <div style={{ display: "flex", gap: "6px" }}>
+                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#ef4444" }}></span>
+                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#eab308" }}></span>
+                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e" }}></span>
+              </div>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(GATEWAY_ORIGIN);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                style={{
+                  background: "transparent",
+                  border: "1px solid #3f3f46",
+                  color: "#a1a1aa",
+                  padding: "2px 8px",
+                  borderRadius: "4px",
+                  fontSize: "11px",
+                  cursor: "pointer",
+                }}
+              >
+                {copied ? "✓ Copied!" : "📋 Copy Gateway URL"}
+              </button>
             </div>
-            <div style={{ color: "#71717a", marginBottom: "4px" }}># active gateway routing rule</div>
-            <div>
-              <span style={{ color: "var(--status-info)" }}>forward</span> {"/*"} &rarr; http://localhost:4000
+            <div style={{ color: "#71717a", marginBottom: "4px" }}># active gateway target endpoint</div>
+            <div style={{ color: "#38bdf8", fontWeight: 600, wordBreak: "break-all" }}>
+              {GATEWAY_ORIGIN}
             </div>
             <div style={{ color: "#71717a", margin: "12px 0 4px 0" }}># request flow lifecycle</div>
             <div>
