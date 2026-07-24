@@ -15,9 +15,29 @@ const WS_URL =
 
 type Tab = "feed" | "heatmap" | "rules";
 
+const GATEWAY_ORIGIN = process.env.NEXT_PUBLIC_GATEWAY_API_URL
+  ? process.env.NEXT_PUBLIC_GATEWAY_API_URL.replace(/\/api\/?$/, "")
+  : "http://localhost:8080";
+
 export default function DashboardPage() {
   const { events, connectionStatus } = useWebSocket(WS_URL);
   const [activeTab, setActiveTab] = useState<Tab>("feed");
+  const [isSimulating, setIsSimulating] = useState(false);
+
+  const handleSimulateTraffic = async () => {
+    setIsSimulating(true);
+    const routes = ["/", "/checkout", "/users", "/products", "/chaos-test"];
+    for (let i = 0; i < 15; i++) {
+      const route = routes[i % routes.length];
+      try {
+        await fetch(`${GATEWAY_ORIGIN}${route}`, { cache: "no-store" });
+      } catch {
+        // Ignore network errors
+      }
+      await new Promise((resolve) => setTimeout(resolve, 150));
+    }
+    setIsSimulating(false);
+  };
 
   const stats = useMemo(() => {
     if (events.length === 0) {
@@ -63,13 +83,33 @@ export default function DashboardPage() {
           </button>
         </nav>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <button
+            onClick={handleSimulateTraffic}
+            disabled={isSimulating}
+            className="btn btn-primary"
+            style={{
+              padding: "6px 14px",
+              fontSize: "13px",
+              borderRadius: "100px",
+              background: isSimulating ? "var(--status-warning)" : "var(--accent-primary, #2563eb)",
+              color: "#fff",
+              border: "none",
+              cursor: isSimulating ? "not-allowed" : "pointer",
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            {isSimulating ? "⏳ Sending Traffic..." : "⚡ Simulate Traffic"}
+          </button>
           <ConnectionStatus status={connectionStatus} />
           <ThemeToggle />
           <a
-            href="http://localhost:8080/api/health"
+            href={`${GATEWAY_ORIGIN}/api/health`}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-primary"
+            className="btn btn-secondary"
             style={{
               padding: "6px 14px",
               fontSize: "13px",
@@ -126,6 +166,27 @@ export default function DashboardPage() {
             A lightweight, programmatically controlled reverse proxy to manage rate limits,
             inject chaos, and analyze latency.
           </p>
+
+          <div style={{ marginBottom: "32px" }}>
+            <button
+              onClick={handleSimulateTraffic}
+              disabled={isSimulating}
+              className="btn btn-primary"
+              style={{
+                padding: "10px 24px",
+                fontSize: "15px",
+                borderRadius: "100px",
+                background: isSimulating ? "var(--status-warning)" : "#2563eb",
+                color: "#fff",
+                border: "none",
+                cursor: isSimulating ? "not-allowed" : "pointer",
+                fontWeight: 600,
+                boxShadow: "0 4px 14px rgba(37,99,235,0.4)",
+              }}
+            >
+              {isSimulating ? "⏳ Sending Test Requests..." : "⚡ Run Live Traffic Test"}
+            </button>
+          </div>
 
           {/* Code display block mimicking reference image */}
           <div
