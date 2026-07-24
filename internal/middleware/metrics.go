@@ -38,9 +38,9 @@ func Metrics(hub *metrics.Hub) Middleware {
 				LatencyMs:  float64(latency.Milliseconds()),
 			}
 
-			// Pull context values set by downstream middleware.
-			if rl, ok := r.Context().Value(ctxKeyRateLimited).(bool); ok {
-				m.RateLimited = rl
+			// Pull context values set by downstream middleware or status code.
+			if rl, ok := r.Context().Value(ctxKeyRateLimited).(bool); (ok && rl) || rc.statusCode == http.StatusTooManyRequests {
+				m.RateLimited = true
 			}
 			if cl, ok := r.Context().Value(ctxKeyChaosLatency).(float64); ok {
 				m.ChaosLatency = cl
