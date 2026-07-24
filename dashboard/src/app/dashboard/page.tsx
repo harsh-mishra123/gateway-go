@@ -17,7 +17,7 @@ type Tab = "feed" | "heatmap" | "rules";
 
 const GATEWAY_ORIGIN = process.env.NEXT_PUBLIC_GATEWAY_API_URL
   ? process.env.NEXT_PUBLIC_GATEWAY_API_URL.replace(/\/api\/?$/, "")
-  : "http://localhost:8080";
+  : "https://gateway-go.onrender.com";
 
 export default function DashboardPage() {
   const { events, connectionStatus } = useWebSocket(WS_URL);
@@ -234,6 +234,13 @@ export default function DashboardPage() {
             <div style={{ color: "#71717a", marginBottom: "4px" }}># active gateway target endpoint</div>
             <div style={{ color: "#38bdf8", fontWeight: 600, wordBreak: "break-all" }}>
               {GATEWAY_ORIGIN}
+            </div>
+            <div style={{ color: "#71717a", margin: "12px 0 4px 0" }}># click route to open live in browser:</div>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", fontSize: "12px" }}>
+              <a href={`${GATEWAY_ORIGIN}/`} target="_blank" rel="noopener noreferrer" style={{ color: "#38bdf8", textDecoration: "underline" }}>/</a>
+              <a href={`${GATEWAY_ORIGIN}/checkout`} target="_blank" rel="noopener noreferrer" style={{ color: "#38bdf8", textDecoration: "underline" }}>/checkout</a>
+              <a href={`${GATEWAY_ORIGIN}/users`} target="_blank" rel="noopener noreferrer" style={{ color: "#38bdf8", textDecoration: "underline" }}>/users</a>
+              <a href={`${GATEWAY_ORIGIN}/chaos-test`} target="_blank" rel="noopener noreferrer" style={{ color: "#38bdf8", textDecoration: "underline" }}>/chaos-test</a>
             </div>
             <div style={{ color: "#71717a", margin: "12px 0 4px 0" }}># request flow lifecycle</div>
             <div>
